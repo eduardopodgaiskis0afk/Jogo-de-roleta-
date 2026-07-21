@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roleta de Prêmios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-1:#0f0c17;
+    --bg-2:#181425;
+    --panel:#1c1830;
+    --panel-border:#332b4d;
+    --purple:#8b5cf6;
+    --purple-glow:rgba(139,92,246,.35);
+    --gray-1:#8b8798;
+    --gray-2:#5f5a70;
+    --text:#ece9f5;
+    --text-dim:#a8a3ba;
+
+    --milspec:#4b69ff;
+    --restricted:#8847ff;
+    --gold:#e4b13a;
+    --gold-2:#ffe27a;
+
+    --green:#22c55e;
+    --green-2:#4ade80;
+    --green-glow:rgba(34,197,94,.35);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{height:100%;margin:0;}
+
+  body{
+    font-family:'Inter', sans-serif;
+    color:var(--text);
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:28px 16px;
+    background:
+      radial-gradient(circle at 20% 10%, rgba(139,92,246,.16), transparent 45%),
+      radial-gradient(circle at 85% 90%, rgba(228,177,58,.10), transparent 40%),
+      linear-gradient(160deg, var(--bg-1), var(--bg-2));
+  }
+
+  .wrap{
+    width:100%;
+    max-width:780px;
+  }
+
+  .header{
+    text-align:center;
+    margin-bottom:22px;
+    position:relative;
+  }
+
+  .header h1{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:26px;
+    font-weight:700;
+    margin:0 0 6px;
+    letter-spacing:.2px;
+  }
+  .header p{
+    margin:0;
+    font-size:13.5px;
+    color:var(--text-dim);
+  }
+
+  .saiba-mais-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    margin-top:14px;
+    padding:9px 18px;
+    border-radius:999px;
+    border:1px solid var(--panel-border);
+    background:rgba(139,92,246,.08);
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    font-size:12.5px;
+    font-weight:600;
+    cursor:pointer;
+    transition:border-color .15s ease, background .15s ease, transform .15s ease;
+  }
+  .saiba-mais-btn:hover{
+    border-color:var(--purple);
+    background:rgba(139,92,246,.16);
+    transform:translateY(-1px);
+  }
+  .saiba-mais-btn svg{ width:14px; height:14px; flex:0 0 auto; }
+
+  .case-panel{
+    background:var(--panel);
+    border:1px solid var(--panel-border);
+    border-radius:20px;
+    padding:22px;
+    box-shadow:0 24px 60px -24px rgba(0,0,0,.6);
+  }
+
+  /* ===== Reel / roleta ===== */
+  .reel-viewport{
+    position:relative;
+    overflow:hidden;
+    border-radius:14px;
+    background:var(--bg-1);
+    border:1px solid var(--panel-border);
+    height:190px;
+    mask-image: linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%);
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%);
+  }
+
+  .pointer{
+    position:absolute;
+    left:50%;
+    top:0;
+    bottom:0;
+    width:3px;
+    background:linear-gradient(180deg, var(--gold-2), var(--gold));
+    transform:translateX(-50%);
+    z-index:5;
+    box-shadow:0 0 12px rgba(228,177,58,.8);
+  }
+  .pointer::before, .pointer::after{
+    content:'';
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+    border:7px solid transparent;
+  }
+  .pointer::before{
+    top:-1px;
+    border-top:0;
+    border-bottom-color:var(--gold-2);
+  }
+  .pointer::after{
+    bottom:-1px;
+    border-bottom:0;
+    border-top-color:var(--gold-2);
+  }
+
+  .reel-track{
+    display:flex;
+    align-items:center;
+    height:100%;
+    gap:16px;
+    padding:0 16px;
+    will-change:transform;
+  }
+
+  .reel-item{
+    flex:0 0 auto;
+    width:150px;
+    height:160px;
+    border-radius:12px;
+    background:var(--bg-2);
+    border:2px solid var(--gray-2);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:10px;
+    position:relative;
+    overflow:hidden;
+  }
+
+  .reel-item img{
+    width:100%;
+    height:95px;
+    object-fit:contain;
+    margin-bottom:8px;
+  }
+
+  .reel-item .name{
+    font-size:11px;
+    font-weight:600;
+    text-align:center;
+    color:var(--text);
+    line-height:1.25;
+  }
+
+  .reel-item.rarity-milspec{ border-color:var(--milspec); box-shadow: inset 0 -22px 18px -14px rgba(75,105,255,.35); }
+  .reel-item.rarity-restricted{ border-color:var(--restricted); box-shadow: inset 0 -22px 18px -14px rgba(136,71,255,.35); }
+  .reel-item.rarity-gold{
+    border-color:var(--gold);
+    box-shadow: inset 0 -22px 18px -14px rgba(228,177,58,.45);
+  }
+  .reel-item.rarity-gold::before{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:linear-gradient(120deg, transparent 30%, rgba(255,226,122,.35) 50%, transparent 70%);
+    background-size:200% 200%;
+    animation:shine 2.4s linear infinite;
+    pointer-events:none;
+  }
+  @keyframes shine{
+    0%{background-position:200% 0;}
+    100%{background-position:-200% 0;}
+  }
+
+  .reel-item.winner{
+    animation:winnerPulse 1s ease-in-out infinite;
+  }
+  @keyframes winnerPulse{
+    0%,100%{ filter:brightness(1); }
+    50%{ filter:brightness(1.25); }
+  }
+
+  /* ===== controles ===== */
+  .controls{
+    display:flex;
+    justify-content:center;
+    margin-top:20px;
+  }
+
+  button.spin-btn{
+    border:none;
+    border-radius:12px;
+    padding:14px 38px;
+    font-family:'Space Grotesk', sans-serif;
+    font-size:15px;
+    font-weight:700;
+    letter-spacing:.3px;
+    color:#fff;
+    background:linear-gradient(135deg, var(--purple), #6d4fd1);
+    cursor:pointer;
+    box-shadow:0 12px 28px -10px var(--purple-glow);
+    transition:transform .15s ease, filter .15s ease, opacity .15s ease;
+  }
+  button.spin-btn:hover:not(:disabled){ filter:brightness(1.08); transform:translateY(-1px); }
+  button.spin-btn:disabled{ opacity:.55; cursor:not-allowed; }
+
+  /* ===== resultado ===== */
+  .result{
+    display:none;
+    margin-top:18px;
+    padding:16px;
+    border-radius:14px;
+    background:var(--bg-1);
+    border:1px solid var(--panel-border);
+    text-align:center;
+    animation:fadeUp .4s ease;
+  }
+  .result.show{ display:block; }
+  @keyframes fadeUp{
+    from{opacity:0; transform:translateY(6px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+  .result .label{
+    font-size:11.5px;
+    text-transform:uppercase;
+    letter-spacing:.8px;
+    color:var(--text-dim);
+    margin-bottom:6px;
+  }
+  .result .name{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:19px;
+    font-weight:700;
+  }
+  .result .tag{
+    display:inline-block;
+    margin-top:8px;
+    padding:4px 12px;
+    border-radius:999px;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.4px;
+  }
+  .tag.milspec{ background:rgba(75,105,255,.15); color:#8fa1ff; }
+  .tag.restricted{ background:rgba(136,71,255,.15); color:#c3a3ff; }
+  .tag.gold{ background:rgba(228,177,58,.18); color:var(--gold-2); }
+
+  /* botão resgatar */
+  .resgatar-btn{
+    display:block;
+    width:100%;
+    margin-top:14px;
+    border:none;
+    border-radius:12px;
+    padding:13px 24px;
+    font-family:'Space Grotesk', sans-serif;
+    font-size:14.5px;
+    font-weight:700;
+    letter-spacing:.3px;
+    color:#052e12;
+    background:linear-gradient(135deg, var(--green-2), var(--green));
+    cursor:pointer;
+    box-shadow:0 12px 26px -10px var(--green-glow);
+    transition:transform .15s ease, filter .15s ease;
+  }
+  .resgatar-btn:hover{ filter:brightness(1.06); transform:translateY(-1px); }
+
+  /* ===== odds / itens possíveis ===== */
+  .odds{
+    display:grid;
+    grid-template-columns:repeat(5, 1fr);
+    gap:10px;
+    margin-top:22px;
+  }
+  .odds-item{
+    background:var(--bg-1);
+    border:1px solid var(--panel-border);
+    border-radius:12px;
+    padding:10px 6px 12px;
+    text-align:center;
+  }
+  .odds-item img{
+    width:100%;
+    height:56px;
+    object-fit:contain;
+    margin-bottom:6px;
+  }
+  .odds-item .oname{
+    font-size:10.5px;
+    font-weight:600;
+    color:var(--text-dim);
+    line-height:1.2;
+    min-height:24px;
+  }
+  .odds-item .opct{
+    margin-top:4px;
+    font-size:11.5px;
+    font-weight:700;
+  }
+  .odds-item.milspec .opct{ color:var(--milspec); }
+  .odds-item.restricted .opct{ color:var(--restricted); }
+  .odds-item.gold .opct{ color:var(--gold); }
+
+  /* ===== painel lateral (Saiba Mais) ===== */
+  .drawer-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(6,4,12,.6);
+    backdrop-filter:blur(2px);
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .25s ease;
+    z-index:50;
+  }
+  .drawer-overlay.open{
+    opacity:1;
+    pointer-events:auto;
+  }
+
+  .drawer{
+    position:fixed;
+    top:0;
+    left:0;
+    bottom:0;
+    width:min(380px, 88vw);
+    background:var(--panel);
+    border-right:1px solid var(--panel-border);
+    box-shadow:24px 0 60px -24px rgba(0,0,0,.7);
+    transform:translateX(-100%);
+    transition:transform .32s cubic-bezier(.2,.8,.2,1);
+    z-index:51;
+    display:flex;
+    flex-direction:column;
+    padding:22px;
+    overflow-y:auto;
+  }
+  .drawer.open{
+    transform:translateX(0);
+  }
+
+  .drawer-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:16px;
+  }
+  .drawer-head h2{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:18px;
+    font-weight:700;
+    margin:0;
+  }
+  .drawer-close{
+    width:32px;
+    height:32px;
+    border-radius:9px;
+    border:1px solid var(--panel-border);
+    background:var(--bg-1);
+    color:var(--text-dim);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    transition:color .15s ease, border-color .15s ease;
+  }
+  .drawer-close:hover{ color:var(--text); border-color:var(--purple); }
+  .drawer-close svg{ width:15px; height:15px; }
+
+  .drawer-body{
+    font-size:13.5px;
+    line-height:1.65;
+    color:var(--text-dim);
+  }
+  .drawer-body p{ margin:0 0 14px; }
+  .drawer-body .highlight{
+    color:var(--gold-2);
+    font-weight:600;
+  }
+
+  .rule-steps{
+    list-style:none;
+    margin:0 0 16px;
+    padding:0;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .rule-steps li{
+    display:flex;
+    gap:10px;
+    background:var(--bg-1);
+    border:1px solid var(--panel-border);
+    border-radius:10px;
+    padding:10px 12px;
+  }
+  .rule-steps .n{
+    flex:0 0 auto;
+    width:22px;
+    height:22px;
+    border-radius:50%;
+    background:rgba(139,92,246,.18);
+    color:var(--purple);
+    font-size:11px;
+    font-weight:700;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .rule-steps span:last-child{
+    font-size:13px;
+    color:var(--text);
+  }
+
+  .example-box{
+    background:var(--bg-1);
+    border:1px dashed var(--panel-border);
+    border-radius:10px;
+    padding:12px 14px;
+    font-size:12.5px;
+    color:var(--text-dim);
+  }
+  .example-box strong{ color:var(--text); }
+  .example-box .step{
+    display:block;
+    padding:3px 0;
+  }
+
+  @media (max-width:640px){
+    .odds{ grid-template-columns:repeat(3,1fr); }
+    .reel-item{ width:120px; height:140px; }
+    .reel-item img{ height:75px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="header">
+    <h1>Roleta de Prêmios</h1>
+    <p>Gire e descubra o que você ganhou. A Karambit Blue Gem é o item mais raro da caixa.</p>
+    <button class="saiba-mais-btn" onclick="abrirRegras()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+      Saiba mais
+    </button>
+  </div>
+
+  <div class="case-panel">
+    <div class="reel-viewport">
+      <div class="pointer"></div>
+      <div class="reel-track" id="reelTrack"></div>
+    </div>
+
+    <div class="controls">
+      <button class="spin-btn" id="spinBtn" onclick="girar()">Girar roleta</button>
+    </div>
+
+    <div class="result" id="result">
+      <div class="label">Você ganhou</div>
+      <div class="name" id="resultName">—</div>
+      <span class="tag" id="resultTag"></span>
+      <button class="resgatar-btn" onclick="resgatar()">Resgatar</button>
+    </div>
+
+    <div class="odds" id="odds"></div>
+  </div>
+</div>
+
+<!-- ===== painel lateral com as regras ===== -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="fecharRegras()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-head">
+    <h2>Como o jogo funciona</h2>
+    <button class="drawer-close" onclick="fecharRegras()" aria-label="Fechar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    </button>
+  </div>
+  <div class="drawer-body">
+    <p>O jogo possui <span class="highlight">7 itens</span> disponíveis para escolha. Entre eles, <span class="highlight">1 é a bomba</span>.</p>
+
+    <ol class="rule-steps">
+      <li><span class="n">1</span><span>O jogador escolhe um item por vez.</span></li>
+      <li><span class="n">2</span><span>Se o item escolhido for a bomba, a rodada termina imediatamente e todos os prêmios acumulados são perdidos.</span></li>
+      <li><span class="n">3</span><span>Se o item não for a bomba, o jogador continua acumulando recompensas e pode escolher outro item.</span></li>
+      <li><span class="n">4</span><span>O jogador pode decidir parar a qualquer momento e ficar com os prêmios conquistados naquela rodada.</span></li>
+      <li><span class="n">5</span><span>O objetivo é continuar jogando e, com sorte, conquistar o prêmio principal: a <strong>Karambit | Blue Gem</strong>.</span></li>
+    </ol>
+
+    <p><strong>Exemplo:</strong></p>
+    <div class="example-box">
+      <span class="step">1. Você escolhe o primeiro item e não é a bomba.</span>
+      <span class="step">2. Escolhe o segundo e também acerta.</span>
+      <span class="step">3. Pode sacar os prêmios ou continuar.</span>
+      <span class="step">4. Se decidir continuar e encontrar a bomba, perde tudo o que acumulou naquela rodada.</span>
+    </div>
+
+    <p style="margin-top:14px;">Assim, cada nova escolha aumenta tanto a chance de ganhar mais recompensas quanto o risco de perder tudo antes de alcançar o grande prêmio: <span class="highlight">Karambit | Blue Gem</span>.</p>
+  </div>
+</div>
+
+<script>
+// ===== itens da roleta =====
+const ITEMS = [
+  {
+    id:'pcgamer',
+    nome:'PC Gamer',
+    img:'https://imgs.search.brave.com/u7zyfsFGaIGET59DK6Nyw9j3fp_Y7-ZB1G7F9tbj2oQ/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWdz/LnBvbnRvZnJpby5j/b20uYnIvMTU2ODU2/MDYxMS8xeGcuanBn',
+    raridade:'milspec',
+    peso:32
+  },
+  {
+    id:'ps5',
+    nome:'PS5',
+    img:'https://imgs.search.brave.com/aGsAD6hAhT0S-7f4SUiIk56Yd6CbjZgMuPtwVi4Ouxw/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9odHRw/Mi5tbHN0YXRpYy5j/b20vRF9RX05QXzJY/Xzk1MjkxMS1NTEIx/MTAxNjEwMTQ3NzBf/MDQyMDI2LUUud2Vi/cA',
+    raridade:'milspec',
+    peso:30
+  },
+  {
+    id:'xbox',
+    nome:'Xbox Series X',
+    img:'https://imgs.search.brave.com/jDSddP7Ogw-HCt7o9kUSVb6velhZxwHV5Eo1i15sm_w/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9odHRw/Mi5tbHN0YXRpYy5j/b20vRF9RX05QXzJY/XzkzNjQ3NS1NTEI5/NjE4MzkzNDk1Ml8x/MDIwMjUtRS53ZWJw',
+    raridade:'milspec',
+    peso:29.5
+  },
+  {
+    id:'iphone17',
+    nome:'iPhone 17',
+    img:'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&auto=format&fit=crop&q=80',
+    raridade:'gold',
+    peso:2
+  },
+  {
+    id:'karambit',
+    nome:'★ Karambit | Blue Gem',
+    img:'https://images.steamusercontent.com/ugc/9506346478236677612/4E06E59E3559CC0247F896E79A1633DCE75CF1E9/',
+    raridade:'gold',
+    peso:1
+ },
+ 
+ {
+    id:'bomba',
+    nome:'Bomba',
+    img:'https://imgs.search.brave.com/gEer_pna-z1sN3HdeInkeV5AHpwnMYxU7oJXACaO8iQ/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWM5LmRlcG9zaXRw/aG90b3MuY29tLzEx/Nzc5NzMvMTEwMC9p/LzQ1MC9kZXBvc2l0/cGhvdG9zXzExMDAx/Mjk1LXN0b2NrLXBo/b3RvLWNhcnRvb24t/c3R5bGUtYm9tYi1v/bi13b29kZW4uanBn',
+    raridade:'milspec',
+    peso:70
+ },
+
+ {
+    id:'100 conto',
+    nome:'100 conto',
+    img:'https://imgs.search.brave.com/EjvfrZtpTYB7ER-2Rd8y5zx7JKFigcKMQM1NxK1Rb6I/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWcu/bWFnbmlmaWMuY29t/L3BzZC1wcmVtaXVt/L25vdGFzLWRlLWNl/bS1yZWFpcy1icmFz/aWxlaXJhcy1jb25j/ZWl0by1maW5hbmNl/aXJvLWZ1bmRvLXRy/YW5zcGFyZW50ZV81/MDQwMTctNDAxLmpw/Zz9zZW10PWFpc19o/eWJyaWQmdz03NDAm/cT04MA',
+    raridade:'milspec',
+    peso:70
+ }
+];
+
+const TAG_LABEL = { milspec:'Mil-Spec', restricted:'Restricted', gold:'Extraordinário' };
+const totalPeso = ITEMS.reduce((s,i)=>s+i.peso,0);
+
+// ===== monta a prévia de odds =====
+const oddsEl = document.getElementById('odds');
+ITEMS.forEach(item=>{
+  const pct = ((item.peso/totalPeso)*100).toFixed(item.peso < 1 ? 2 : 1);
+  const div = document.createElement('div');
+  div.className = `odds-item ${item.raridade}`;
+  div.innerHTML = `
+    <img src="${item.img}" alt="${item.nome}">
+    <div class="oname">${item.nome}</div>
+    <div class="opct">${pct}%</div>
+  `;
+  oddsEl.appendChild(div);
+});
+
+// ===== sorteio ponderado =====
+function sortearItem(){
+  let r = Math.random() * totalPeso;
+  for(const item of ITEMS){
+    if(r < item.peso) return item;
+    r -= item.peso;
+  }
+  return ITEMS[0];
+}
+
+function criarReelItemHTML(item){
+  return `
+    <div class="reel-item rarity-${item.raridade}">
+      <img src="${item.img}" alt="${item.nome}">
+      <div class="name">${item.nome}</div>
+    </div>
+  `;
+}
+
+let girando = false;
+
+function girar(){
+  if(girando) return;
+  girando = true;
+
+  const btn = document.getElementById('spinBtn');
+  const track = document.getElementById('reelTrack');
+  const viewport = track.parentElement;
+  const resultBox = document.getElementById('result');
+
+  btn.disabled = true;
+  resultBox.classList.remove('show');
+
+  // item vencedor
+  const vencedor = sortearItem();
+
+  // monta uma fita longa de itens aleatórios (visual) + vencedor numa posição fixa
+  const TOTAL_ITENS = 45;
+  const INDICE_VENCEDOR = 38;
+
+  let html = '';
+  for(let i = 0; i < TOTAL_ITENS; i++){
+    if(i === INDICE_VENCEDOR){
+      html += criarReelItemHTML(vencedor);
+    } else {
+      html += criarReelItemHTML(sortearItem());
+    }
+  }
+
+  track.innerHTML = html;
+  track.style.transition = 'none';
+  track.style.transform = 'translateX(0px)';
+  // força reflow
+  void track.offsetWidth;
+
+  const itemEl = track.children[0];
+  const itemWidth = itemEl.getBoundingClientRect().width;
+  const gap = 16;
+  const slot = itemWidth + gap;
+
+  const viewportWidth = viewport.getBoundingClientRect().width;
+  const jitter = (Math.random() * (itemWidth * 0.5)) - (itemWidth * 0.25);
+
+  const alvoX = -(INDICE_VENCEDOR * slot + itemWidth/2 - viewportWidth/2) + jitter;
+
+  requestAnimationFrame(()=>{
+    track.style.transition = 'transform 6.2s cubic-bezier(0.12, 0.72, 0.15, 1)';
+    track.style.transform = `translateX(${alvoX}px)`;
+  });
+
+  setTimeout(()=>{
+    const vencedorEl = track.children[INDICE_VENCEDOR];
+    vencedorEl.classList.add('winner');
+
+    document.getElementById('resultName').textContent = vencedor.nome;
+    const tag = document.getElementById('resultTag');
+    tag.textContent = TAG_LABEL[vencedor.raridade];
+    tag.className = `tag ${vencedor.raridade}`;
+    resultBox.classList.add('show');
+
+    btn.disabled = false;
+    btn.textContent = 'Girar novamente';
+    girando = false;
+  }, 6400);
+}
+
+// gira a fita inicial parada (visual) antes do primeiro clique
+(function preencherReelInicial(){
+  const track = document.getElementById('reelTrack');
+  let html = '';
+  for(let i = 0; i < 12; i++){
+    html += criarReelItemHTML(sortearItem());
+  }
+  track.innerHTML = html;
+})();
+
+// ===== painel lateral "Saiba mais" =====
+function abrirRegras(){
+  document.getElementById('drawer').classList.add('open');
+  document.getElementById('drawerOverlay').classList.add('open');
+}
+function fecharRegras(){
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('drawerOverlay').classList.remove('open');
+}
+document.addEventListener('keydown', (e)=>{
+  if(e.key === 'Escape') fecharRegras();
+});
+
+// ===== botão Resgatar =====
+function resgatar(){
+  // Troque a URL abaixo pela página real para onde o resgate deve levar o usuário
+  window.location.href = 'http://127.0.0.1:5500/html/cep.html';
+}
+</script>
+
+</body>
+</html>

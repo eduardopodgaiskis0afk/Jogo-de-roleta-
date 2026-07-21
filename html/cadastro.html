@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="scene">
+  <div class="mark">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="11" width="18" height="10" rx="2"></rect>
+      <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+    </svg>
+  </div>
+
+  <div class="card">
+    <div class="panels">
+      <!-- PAINEL REGISTRO -->
+      <div class="panel active" id="panel-registrar">
+        <h1>Criar conta</h1>
+        <p class="subtitle">Cadastre-se com seu e-mail e uma senha.</p>
+
+        <div class="msg" id="msg-registrar"></div>
+
+        <form onsubmit="return enviarRegistro(event)" novalidate>
+          <div class="field">
+            <label for="email-registrar">E-mail</label>
+            <input type="email" id="email-registrar" placeholder="voce@exemplo.com" required>
+          </div>
+
+          <div class="field">
+            <label for="senha-registrar">Senha</label>
+            <div class="input-wrap">
+              <input type="password" id="senha-registrar" placeholder="Mínimo de 6 caracteres" required minlength="6" oninput="checarForca(this.value)">
+              <button type="button" class="toggle-eye" onclick="alternarSenha('senha-registrar', this)" aria-label="Mostrar senha">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              </button>
+            </div>
+            <div class="strength"><div class="strength-fill" id="strength-fill"></div></div>
+          </div>
+
+          <div class="field">
+            <label for="senha-confirmar">Confirmar senha</label>
+            <input type="password" id="senha-confirmar" placeholder="••••••••" required minlength="6">
+          </div>
+
+          <button type="submit" class="submit" style="margin-top:4px;">Criar conta</button>
+        </form>
+
+        <p class="foot-note">Já tem conta? <a href="login.html" class="link">Entrar</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../js/cadastro.js"></script>
+<script>
+function alternarSenha(id, botao){
+  const input = document.getElementById(id);
+  const visivel = input.type === 'text';
+  input.type = visivel ? 'password' : 'text';
+  botao.style.color = visivel ? '' : 'var(--purple-2)';
+}
+
+function checarForca(valor){
+  const fill = document.getElementById('strength-fill');
+  let pontos = 0;
+  if(valor.length >= 6) pontos++;
+  if(valor.length >= 10) pontos++;
+  if(/[A-Z]/.test(valor) && /[0-9]/.test(valor)) pontos++;
+  if(/[^A-Za-z0-9]/.test(valor)) pontos++;
+
+  const niveis = [
+    {largura:'0%', cor:'var(--gray-2)'},
+    {largura:'30%', cor:'#f0709a'},
+    {largura:'55%', cor:'#e0a35c'},
+    {largura:'80%', cor:'#a78bfa'},
+    {largura:'100%', cor:'#8b5cf6'}
+  ];
+  const nivel = niveis[Math.min(pontos, 4)];
+  fill.style.width = nivel.largura;
+  fill.style.background = nivel.cor;
+}
+
+function mostrarMsg(id, texto){
+  const el = document.getElementById(id);
+  el.textContent = texto;
+  el.classList.add('show');
+}
+
+function enviarRegistro(e){
+  e.preventDefault();
+
+  const email = document.getElementById('email-registrar').value.trim().toLowerCase();
+  const senha = document.getElementById('senha-registrar').value;
+  const confirmar = document.getElementById('senha-confirmar').value;
+
+  if(senha !== confirmar){
+    mostrarMsg('msg-registrar', 'As senhas não conferem. Tente novamente.');
+    return false;
+  }
+
+  const resultado = salvarUsuarioLocal(email, senha);
+
+  if (!resultado.ok) {
+    mostrarMsg('msg-registrar', resultado.message);
+    return false;
+  }
+
+  mostrarMsg('msg-registrar', 'Conta criada com sucesso! Você já pode entrar com seu e-mail e senha.');
+  return false;
+}
+</script>
+
+</body>
+</html>

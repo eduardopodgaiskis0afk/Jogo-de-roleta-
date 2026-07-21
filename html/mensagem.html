@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recebemos seus dados!</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-1:#0f0c17;
+    --bg-2:#181425;
+    --panel:#1c1830;
+    --panel-border:#332b4d;
+    --purple:#8b5cf6;
+    --purple-glow:rgba(139,92,246,.35);
+    --text:#ece9f5;
+    --text-dim:#a8a3ba;
+    --gold-2:#ffe27a;
+    --green:#22c55e;
+    --green-2:#4ade80;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;margin:0;}
+  body{
+    font-family:'Inter', sans-serif;
+    color:var(--text);
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:28px 16px;
+    background:
+      radial-gradient(circle at 20% 10%, rgba(139,92,246,.16), transparent 45%),
+      radial-gradient(circle at 85% 90%, rgba(228,177,58,.10), transparent 40%),
+      linear-gradient(160deg, var(--bg-1), var(--bg-2));
+  }
+  .wrap{ width:100%; max-width:480px; }
+
+  .panel{
+    background:var(--panel);
+    border:1px solid var(--panel-border);
+    border-radius:20px;
+    padding:32px 28px;
+    box-shadow:0 24px 60px -24px rgba(0,0,0,.6);
+    text-align:center;
+  }
+
+  .check{
+    width:62px;
+    height:62px;
+    margin:0 auto 18px;
+    border-radius:50%;
+    background:rgba(34,197,94,.14);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .check svg{ width:30px; height:30px; color:var(--green-2); }
+
+  h1{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:22px;
+    font-weight:700;
+    margin:0 0 8px;
+  }
+  .subtitle{
+    font-size:13.5px;
+    color:var(--text-dim);
+    line-height:1.55;
+    margin:0 0 24px;
+  }
+  .subtitle span{ color:var(--gold-2); font-weight:600; }
+
+  .resumo{
+    text-align:left;
+    background:var(--bg-1);
+    border:1px solid var(--panel-border);
+    border-radius:14px;
+    padding:16px 18px;
+    margin-bottom:10px;
+  }
+  .resumo .item{
+    display:flex;
+    justify-content:space-between;
+    gap:16px;
+    padding:8px 0;
+    border-bottom:1px solid var(--panel-border);
+    font-size:12.5px;
+  }
+  .resumo .item:last-child{ border-bottom:none; }
+  .resumo .item .k{ color:var(--text-dim); flex:0 0 auto; }
+  .resumo .item .v{ color:var(--text); font-weight:600; text-align:right; }
+
+  .resumo .item.msg .v{
+    font-weight:500;
+    color:var(--text-dim);
+    white-space:pre-wrap;
+  }
+
+  .voltar-link{
+    display:inline-block;
+    margin-top:18px;
+    font-size:12.5px;
+    color:var(--purple);
+    text-decoration:none;
+  }
+  .voltar-link:hover{ text-decoration:underline; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="panel">
+    <div class="check">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+    </div>
+    <h1>Recebemos seus dados!</h1>
+    <p class="subtitle">Obrigado, <span id="nomeDestaque">ganhador(a)</span>! Seu prêmio será enviado para o endereço informado. Confira abaixo o resumo do que foi enviado.</p>
+
+    <div class="resumo" id="resumoBox"></div>
+
+    <a class="voltar-link" href="http://127.0.0.1:5500/html/contato.html"> entrar em contato</a>
+  </div>
+</div>
+
+<script src="../js/mensagem.js"></script>
+</body>
+</html>

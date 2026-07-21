@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fale Conosco — Resgate do Prêmio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-1:#0f0c17;
+    --bg-2:#181425;
+    --panel:#1c1830;
+    --panel-border:#332b4d;
+    --purple:#8b5cf6;
+    --purple-glow:rgba(139,92,246,.35);
+    --text:#ece9f5;
+    --text-dim:#a8a3ba;
+    --gold-2:#ffe27a;
+    --error:#f87171;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;margin:0;}
+  body{
+    font-family:'Inter', sans-serif;
+    color:var(--text);
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:28px 16px;
+    background:
+      radial-gradient(circle at 20% 10%, rgba(139,92,246,.16), transparent 45%),
+      radial-gradient(circle at 85% 90%, rgba(228,177,58,.10), transparent 40%),
+      linear-gradient(160deg, var(--bg-1), var(--bg-2));
+  }
+  .wrap{ width:100%; max-width:520px; }
+  .header{ text-align:center; margin-bottom:22px; }
+  .header .eyebrow{
+    display:inline-block;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.8px;
+    text-transform:uppercase;
+    color:var(--gold-2);
+    background:rgba(228,177,58,.12);
+    padding:5px 12px;
+    border-radius:999px;
+    margin-bottom:12px;
+  }
+  .header h1{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:24px;
+    font-weight:700;
+    margin:0 0 8px;
+  }
+  .header p{ margin:0; font-size:13.5px; color:var(--text-dim); line-height:1.5; }
+
+  .panel{
+    background:var(--panel);
+    border:1px solid var(--panel-border);
+    border-radius:20px;
+    padding:26px;
+    box-shadow:0 24px 60px -24px rgba(0,0,0,.6);
+  }
+
+  .contact-direct{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:var(--bg-1);
+    border:1px solid var(--panel-border);
+    border-radius:12px;
+    padding:12px 14px;
+    margin-bottom:22px;
+    font-size:13px;
+  }
+  .contact-direct svg{ width:17px; height:17px; flex:0 0 auto; color:var(--purple); }
+  .contact-direct a{ color:var(--text); font-weight:600; text-decoration:none; }
+  .contact-direct a:hover{ text-decoration:underline; }
+  .contact-direct .muted{ color:var(--text-dim); }
+
+  .field{ margin-bottom:16px; }
+  .field label{
+    display:block;
+    font-size:12.5px;
+    font-weight:600;
+    color:var(--text-dim);
+    margin-bottom:6px;
+  }
+  .field input, .field textarea{
+    width:100%;
+    background:var(--bg-1);
+    border:1px solid var(--panel-border);
+    border-radius:10px;
+    padding:11px 13px;
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    font-size:13.5px;
+    outline:none;
+    transition:border-color .15s ease;
+  }
+  .field textarea{ resize:vertical; min-height:96px; }
+  .field input:focus, .field textarea:focus{ border-color:var(--purple); }
+  .field input.invalid, .field textarea.invalid{ border-color:var(--error); }
+  .field .err-msg{
+    display:none;
+    color:var(--error);
+    font-size:11.5px;
+    margin-top:5px;
+  }
+  .field.has-error .err-msg{ display:block; }
+
+  .submit-btn{
+    width:100%;
+    border:none;
+    border-radius:12px;
+    padding:14px 24px;
+    font-family:'Space Grotesk', sans-serif;
+    font-size:15px;
+    font-weight:700;
+    letter-spacing:.3px;
+    color:#fff;
+    background:linear-gradient(135deg, var(--purple), #6d4fd1);
+    cursor:pointer;
+    box-shadow:0 12px 28px -10px var(--purple-glow);
+    transition:transform .15s ease, filter .15s ease;
+    margin-top:6px;
+  }
+  .submit-btn:hover{ filter:brightness(1.08); transform:translateY(-1px); }
+
+  .form-status{
+    display:none;
+    margin-top:14px;
+    padding:10px 14px;
+    border-radius:10px;
+    font-size:12.5px;
+    text-align:center;
+  }
+  .form-status.show{ display:block; }
+  .form-status.success{ background:rgba(139,92,246,.12); color:#c9b8ff; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="header">
+    <span class="eyebrow">Resgate do prêmio</span>
+    <h1>Entre em contato</h1>
+    <p>Parabéns pela conquista! Preencha o formulário abaixo para darmos início ao envio do seu prêmio.</p>
+  </div>
+
+  <div class="panel">
+    <div class="contact-direct">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z" opacity="0"></path><path d="M22 6l-10 7L2 6"></path><path d="M2 6h20v12H2z"></path></svg>
+      <span class="muted">Prefere falar direto?</span>
+      <a href="mailto:Eduardopodgaiskis017@gmail.com"></a>
+    </div>
+
+    <form id="contatoForm" novalidate>
+      <div class="field" id="fieldNome">
+        <label for="nome">Nome completo</label>
+        <input type="text" id="nome" name="nome" placeholder="Seu nome">
+        <div class="err-msg">Informe seu nome.</div>
+      </div>
+
+      <div class="field" id="fieldEmail">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" name="email" placeholder="seuemail@exemplo.com">
+        <div class="err-msg">Informe um e-mail válido.</div>
+      </div>
+
+      <div class="field" id="fieldMensagem">
+        <label for="mensagem">Mensagem</label>
+        <textarea id="mensagem" name="mensagem" placeholder="Conte um pouco sobre o prêmio ganho ou deixe uma observação..."></textarea>
+        <div class="err-msg">Escreva uma mensagem.</div>
+      </div>
+
+      <button type="submit" class="submit-btn">Continuar</button>
+      <div class="form-status" id="formStatus"></div>
+    </form>
+  </div>
+</div>
+
+<script src="../js/contato.js"></script>
+</body>
+</html>

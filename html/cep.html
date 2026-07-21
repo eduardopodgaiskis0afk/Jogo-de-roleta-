@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Endereço de Entrega — Resgate do Prêmio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-1:#0f0c17;
+    --bg-2:#181425;
+    --panel:#1c1830;
+    --panel-border:#332b4d;
+    --purple:#8b5cf6;
+    --purple-glow:rgba(139,92,246,.35);
+    --text:#ece9f5;
+    --text-dim:#a8a3ba;
+    --gold-2:#ffe27a;
+    --error:#f87171;
+    --green:#22c55e;
+    --green-2:#4ade80;
+    --green-glow:rgba(34,197,94,.35);
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;margin:0;}
+  body{
+    font-family:'Inter', sans-serif;
+    color:var(--text);
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:28px 16px;
+    background:
+      radial-gradient(circle at 20% 10%, rgba(139,92,246,.16), transparent 45%),
+      radial-gradient(circle at 85% 90%, rgba(228,177,58,.10), transparent 40%),
+      linear-gradient(160deg, var(--bg-1), var(--bg-2));
+  }
+  .wrap{ width:100%; max-width:560px; }
+  .header{ text-align:center; margin-bottom:22px; }
+  .header .eyebrow{
+    display:inline-block;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.8px;
+    text-transform:uppercase;
+    color:var(--gold-2);
+    background:rgba(228,177,58,.12);
+    padding:5px 12px;
+    border-radius:999px;
+    margin-bottom:12px;
+  }
+  .header h1{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:24px;
+    font-weight:700;
+    margin:0 0 8px;
+  }
+  .header p{ margin:0; font-size:13.5px; color:var(--text-dim); line-height:1.5; }
+  .header p span{ color:var(--text); font-weight:600; }
+
+  .panel{
+    background:var(--panel);
+    border:1px solid var(--panel-border);
+    border-radius:20px;
+    padding:26px;
+    box-shadow:0 24px 60px -24px rgba(0,0,0,.6);
+  }
+
+  .cep-row{
+    display:flex;
+    gap:10px;
+    margin-bottom:6px;
+  }
+  .cep-row .field{ flex:1; margin-bottom:0; }
+  .buscar-btn{
+    flex:0 0 auto;
+    border:none;
+    border-radius:10px;
+    padding:0 20px;
+    font-family:'Space Grotesk', sans-serif;
+    font-size:13.5px;
+    font-weight:700;
+    color:#fff;
+    background:linear-gradient(135deg, var(--purple), #6d4fd1);
+    cursor:pointer;
+    transition:filter .15s ease, opacity .15s ease;
+  }
+  .buscar-btn:hover:not(:disabled){ filter:brightness(1.08); }
+  .buscar-btn:disabled{ opacity:.55; cursor:not-allowed; }
+
+  .cep-status{
+    font-size:12px;
+    margin:8px 0 18px;
+    min-height:16px;
+  }
+  .cep-status.loading{ color:var(--text-dim); }
+  .cep-status.error{ color:var(--error); }
+  .cep-status.success{ color:var(--green-2); }
+
+  .field{ margin-bottom:16px; }
+  .field label{
+    display:block;
+    font-size:12.5px;
+    font-weight:600;
+    color:var(--text-dim);
+    margin-bottom:6px;
+  }
+  .field input{
+    width:100%;
+    background:var(--bg-1);
+    border:1px solid var(--panel-border);
+    border-radius:10px;
+    padding:11px 13px;
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    font-size:13.5px;
+    outline:none;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .field input:focus{ border-color:var(--purple); }
+  .field input.invalid{ border-color:var(--error); }
+  .field input[readonly]{ background:#141020; color:var(--text-dim); }
+
+  .row-2{ display:flex; gap:12px; }
+  .row-2 .field{ flex:1; }
+
+  .err-msg{
+    display:none;
+    color:var(--error);
+    font-size:11.5px;
+    margin-top:5px;
+  }
+  .field.has-error .err-msg{ display:block; }
+
+  .endereco-box{
+    display:none;
+  }
+  .endereco-box.show{ display:block; }
+
+  .confirmar-btn{
+    width:100%;
+    border:none;
+    border-radius:12px;
+    padding:14px 24px;
+    font-family:'Space Grotesk', sans-serif;
+    font-size:15px;
+    font-weight:700;
+    letter-spacing:.3px;
+    color:#052e12;
+    background:linear-gradient(135deg, var(--green-2), var(--green));
+    cursor:pointer;
+    box-shadow:0 12px 28px -10px var(--green-glow);
+    transition:transform .15s ease, filter .15s ease, opacity .15s ease;
+    margin-top:6px;
+  }
+  .confirmar-btn:hover:not(:disabled){ filter:brightness(1.06); transform:translateY(-1px); }
+  .confirmar-btn:disabled{ opacity:.5; cursor:not-allowed; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="header">
+    <span class="eyebrow">Etapa 2 de 2</span>
+    <h1>Endereço de entrega</h1>
+    <p>Olá, <span id="saudacaoNome">ganhador(a)</span>! Informe seu CEP para localizarmos seu endereço automaticamente.</p>
+  </div>
+
+  <div class="panel">
+    <form id="cepForm" novalidate>
+      <div class="cep-row">
+        <div class="field" id="fieldCep">
+          <label for="cep">CEP</label>
+          <input type="text" id="cep" name="cep" placeholder="00000-000" maxlength="9">
+          <div class="err-msg">Digite um CEP válido (8 dígitos).</div>
+        </div>
+        <button type="button" class="buscar-btn" id="buscarBtn">Buscar</button>
+      </div>
+      <div class="cep-status" id="cepStatus"></div>
+
+      <div class="endereco-box" id="enderecoBox">
+        <div class="field" id="fieldRua">
+          <label for="rua">Rua</label>
+          <input type="text" id="rua" name="rua" readonly>
+        </div>
+
+        <div class="row-2">
+          <div class="field" id="fieldBairro">
+            <label for="bairro">Bairro</label>
+            <input type="text" id="bairro" name="bairro" readonly>
+          </div>
+          <div class="field" id="fieldCidade">
+            <label for="cidade">Cidade / UF</label>
+            <input type="text" id="cidade" name="cidade" readonly>
+          </div>
+        </div>
+
+        <div class="row-2">
+          <div class="field" id="fieldNumero">
+            <label for="numero">Número</label>
+            <input type="text" id="numero" name="numero" placeholder="Ex: 123">
+            <div class="err-msg">Informe o número.</div>
+          </div>
+          <div class="field" id="fieldComplemento">
+            <label for="complemento">Complemento (opcional)</label>
+            <input type="text" id="complemento" name="complemento" placeholder="Apto, bloco, referência...">
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="confirmar-btn" id="confirmarBtn" disabled>Confirmar e enviar</button>
+    </form>
+  </div>
+</div>
+
+<script src="../js/cep.js"></script>
+</body>
+</html>
