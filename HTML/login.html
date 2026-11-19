@@ -1,82 +1,71 @@
-
-    display:none;
-    color:var(--error);
-    font-size:11.5px;
-    margin-top:5px;
-  }
-  .field.has-error .err-msg{ display:block; }
-
-  .submit-btn{
-    width:100%;
-    border:none;
-    border-radius:12px;
-    padding:14px 24px;
-    font-family:'Space Grotesk', sans-serif;
-    font-size:15px;
-    font-weight:700;
-    letter-spacing:.3px;
-    color:#fff;
-    background:linear-gradient(135deg, var(--purple), #6d4fd1);
-    cursor:pointer;
-    box-shadow:0 12px 28px -10px var(--purple-glow);
-    transition:transform .15s ease, filter .15s ease;
-    margin-top:6px;
-  }
-  .submit-btn:hover{ filter:brightness(1.08); transform:translateY(-1px); }
-
-  .form-status{
-    display:none;
-    margin-top:14px;
-    padding:10px 14px;
-    border-radius:10px;
-    font-size:12.5px;
-    text-align:center;
-  }
-  .form-status.show{ display:block; }
-  .form-status.success{ background:rgba(139,92,246,.12); color:#c9b8ff; }
-</style>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Entrar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../Style/style.css">
 </head>
 <body>
-
-<div class="wrap">
-  <div class="header">
-    <span class="eyebrow">Resgate do prêmio</span>
-    <h1>Entre em contato</h1>
-    <p>Parabéns pela conquista! Preencha o formulário abaixo para darmos início ao envio do seu prêmio.</p>
+<div class="scene">
+  <div class="mark">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><path d="M10 17l5-5-5-5"></path><path d="M15 12H3"></path></svg>
   </div>
+  <div class="card">
+    <h1>Entrar</h1>
+    <p class="subtitle">Use o e-mail e a senha cadastrados para girar a roleta.</p>
+    <div class="msg" id="msg-login" role="alert"></div>
 
-  <div class="panel">
-    <div class="contact-direct">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z" opacity="0"></path><path d="M22 6l-10 7L2 6"></path><path d="M2 6h20v12H2z"></path></svg>
-      <span class="muted">Prefere falar direto?</span>
-      <a href="mailto:Eduardopodgaiskis017@gmail.com"></a>
-    </div>
-
-    <form id="contatoForm" novalidate>
-      <div class="field" id="fieldNome">
-        <label for="nome">Nome completo</label>
-        <input type="text" id="nome" name="nome" placeholder="Seu nome">
-        <div class="err-msg">Informe seu nome.</div>
+    <form id="form-login" novalidate>
+      <div class="field">
+        <label for="email-login">E-mail</label>
+        <input type="email" id="email-login" placeholder="voce@exemplo.com" autocomplete="email">
       </div>
-
-      <div class="field" id="fieldEmail">
-        <label for="email">E-mail</label>
-        <input type="email" id="email" name="email" placeholder="seuemail@exemplo.com">
-        <div class="err-msg">Informe um e-mail válido.</div>
+      <div class="field">
+        <label for="senha-login">Senha</label>
+        <div class="input-wrap">
+          <input type="password" id="senha-login" placeholder="••••••••" autocomplete="current-password">
+          <button type="button" class="toggle-eye" data-olho="senha-login" aria-label="Mostrar senha"></button>
+        </div>
       </div>
-
-      <div class="field" id="fieldMensagem">
-        <label for="mensagem">Mensagem</label>
-        <textarea id="mensagem" name="mensagem" placeholder="Conte um pouco sobre o prêmio ganho ou deixe uma observação..."></textarea>
-        <div class="err-msg">Escreva uma mensagem.</div>
-      </div>
-
-      <button type="submit" class="submit-btn">Continuar</button>
-      <div class="form-status" id="formStatus"></div>
+      <button type="submit" class="submit" id="btn-login">Entrar</button>
     </form>
+
+    <p class="foot-note">Ainda não tem conta? <a href="cadastro.html" class="link">Criar conta</a></p>
   </div>
 </div>
 
-<script src="../js/contato.js"></script>
+<script src="../js/auth.js"></script>
+<script>
+document.querySelectorAll('[data-olho]').forEach(b => {
+  b.innerHTML = OLHO;
+  b.addEventListener('click', () => alternarSenha(b.dataset.olho, b));
+});
+
+document.getElementById('form-login').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const $ = (id) => document.getElementById(id);
+  const email = $('email-login').value.trim().toLowerCase();
+  const senha = $('senha-login').value;
+
+  if (!emailValido(email)) { mostrarMsg('msg-login', 'Informe um endereço de e-mail válido.'); return $('email-login').focus(); }
+  if (!senha) { mostrarMsg('msg-login', 'Informe sua senha.'); return $('senha-login').focus(); }
+
+  $('btn-login').disabled = true;
+  const permissao = pedirPermissaoNotificacao();   // precisa ser chamado dentro do clique/envio
+  const r = await autenticarUsuario(email, senha);
+  if (!r.ok) { $('btn-login').disabled = false; return mostrarMsg('msg-login', r.message); }
+
+  await permissao;
+  const texto = notificarBoasVindas(r.nome);        // notificação do navegador
+  mostrarMsg('msg-login', `${texto}! Redirecionando...`, 'sucesso');
+
+  let destino = './roleta.html';
+  try { destino = sessionStorage.getItem('voltarPara') || destino; sessionStorage.removeItem('voltarPara'); } catch (err) {}
+  setTimeout(() => { window.location.href = destino; }, 1800);
+});
+</script>
 </body>
 </html>

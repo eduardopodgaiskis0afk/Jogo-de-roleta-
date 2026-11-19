@@ -270,3 +270,39 @@ button.submit:active{transform:translateY(0);}
 @media (prefers-reduced-motion: reduce){
   *{animation:none !important; transition:none !important;}
 }
+/* ===== Acréscimos ===== */
+
+/* Campo de nome (type="text") com o mesmo visual do e-mail e da senha */
+input[type="text"]{
+  width:100%;
+  background:var(--bg-1);
+  border:1px solid var(--card-border);
+  border-radius:10px;
+  padding:12px 14px;
+  font-size:14px;
+  color:var(--text);
+  outline:none;
+  transition:border-color .2s ease, box-shadow .2s ease;
+  font-family:'Inter', sans-serif;
+}
+
+/* Olho da senha fica roxo quando a senha está visível */
+.toggle-eye.on{color:var(--purple-2);}
+
+/* Mensagem de erro e de sucesso (o JS adiciona essas classes) */
+.msg.erro{
+  background:rgba(240,112,154,0.12);
+  border-color:rgba(240,112,154,0.3);
+  color:#ff9bbb;
+}
+.msg.sucesso{
+  background:rgba(74,222,128,0.10);
+  border-color:rgba(74,222,128,0.3);
+  color:#4ade80;
+}
+
+/* Botão desativado enquanto envia */
+button.submit:disabled{
+  opacity:.6;
+  cursor:not-allowed;
+}
