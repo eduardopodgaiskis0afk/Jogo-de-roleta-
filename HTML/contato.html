@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fale Conosco — Resgate do Prêmio</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg-1:#15111f;
+      --bg-2:#1f1a2e;
+      --card:#241e35;
+      --card-border:#382f4d;
+      --purple-1:#8b5cf6;
+      --purple-2:#a78bfa;
+      --purple-glow:rgba(139,92,246,.35);
+      --gray-1:#8b8798;
+      --gray-2:#5f5a70;
+      --text:#ece9f5;
+      --text-dim:#a8a3ba;
+      --danger:#f0709a;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ margin:0; min-height:100%; }
+
+    body{
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+      font-family:'Inter',sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 12% 15%, rgba(139,92,246,.18), transparent 45%),
+        radial-gradient(circle at 88% 85%, rgba(139,92,246,.12), transparent 40%),
+        linear-gradient(160deg, var(--bg-1), var(--bg-2));
+    }
+
+    .contato{
+      width:100%;
+      max-width:940px;
+      display:grid;
+      grid-template-columns:5fr 6fr;
+      overflow:hidden;
+      border-radius:24px;
+      background:var(--card);
+      border:1px solid var(--card-border);
+      box-shadow:0 30px 80px -24px rgba(0,0,0,.7);
+    }
+
+    /* ===== Lado esquerdo ===== */
+    .info{
+      position:relative;
+      display:flex;
+      flex-direction:column;
+      padding:40px 34px;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(167,139,250,.35), transparent 55%),
+        linear-gradient(160deg, #5b3fa8, #2a2145 70%);
+    }
+    .info::after{
+      content:'';
+      position:absolute;
+      right:-70px; bottom:-70px;
+      width:220px; height:220px;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.1);
+      box-shadow:0 0 0 36px rgba(255,255,255,.03), 0 0 0 72px rgba(255,255,255,.02);
+      pointer-events:none;
+    }
+    .badge{
+      align-self:flex-start;
+      padding:5px 12px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:600;
+      letter-spacing:.7px;
+      text-transform:uppercase;
+      background:rgba(255,255,255,.12);
+      color:#fff;
+    }
+    .info h1{
+      margin:18px 0 10px;
+      font-family:'Space Grotesk',sans-serif;
+      font-size:30px;
+      line-height:1.15;
+      font-weight:700;
+    }
+    .info > p{
+      margin:0;
+      font-size:14px;
+      line-height:1.6;
+      color:rgba(236,233,245,.78);
+    }
+
+    .info-list{
+      list-style:none;
+      margin:auto 0 0;
+      padding:32px 0 0;
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+      position:relative;
+      z-index:1;
+    }
+    .info-list li{ display:flex; align-items:center; gap:12px; font-size:13px; }
+    .info-list .ico{
+      flex:0 0 38px;
+      height:38px;
+      display:flex; align-items:center; justify-content:center;
+      border-radius:11px;
+      background:rgba(255,255,255,.12);
+    }
+    .info-list svg{ width:18px; height:18px; stroke:#fff; }
+    .info-list small{ display:block; margin-bottom:2px; font-size:11px; color:rgba(236,233,245,.6); }
+    .info-list a{ color:#fff; font-weight:600; text-decoration:none; word-break:break-all; }
+    .info-list a:hover{ text-decoration:underline; }
+
+    /* ===== Lado direito ===== */
+    .form-area{ padding:40px 38px; display:flex; flex-direction:column; justify-content:center; }
+    .form-area h2{
+      margin:0 0 4px;
+      font-family:'Space Grotesk',sans-serif;
+      font-size:20px;
+      font-weight:600;
+    }
+    .form-area .sub{ margin:0 0 24px; font-size:13px; color:var(--text-dim); }
+
+    .field{ margin-bottom:18px; }
+    .field > label, .group-label{
+      display:block;
+      margin-bottom:8px;
+      font-size:12px;
+      font-weight:600;
+      letter-spacing:.5px;
+      text-transform:uppercase;
+      color:var(--gray-1);
+    }
+
+    input[type="text"], input[type="email"], textarea{
+      width:100%;
+      padding:13px 15px;
+      font-family:'Inter',sans-serif;
+      font-size:14px;
+      color:var(--text);
+      background:var(--bg-1);
+      border:1px solid var(--card-border);
+      border-radius:12px;
+      outline:none;
+      transition:border-color .2s, box-shadow .2s;
+    }
+    textarea{ resize:none; min-height:118px; line-height:1.5; }
+    input::placeholder, textarea::placeholder{ color:var(--gray-2); }
+    input:focus, textarea:focus{ border-color:var(--purple-1); box-shadow:0 0 0 3px var(--purple-glow); }
+
+    .field.has-error input,
+    .field.has-error textarea{ border-color:var(--danger); }
+    .err-msg{ display:none; margin-top:6px; font-size:12px; color:var(--danger); }
+    .field.has-error .err-msg{ display:block; }
+
+    .counter{ margin-top:6px; text-align:right; font-size:11.5px; color:var(--gray-2); }
+
+    /* Chips de assunto */
+    .chips{ display:flex; flex-wrap:wrap; gap:8px; }
+    .chip input{ position:absolute; opacity:0; pointer-events:none; }
+    .chip span{
+      display:inline-block;
+      padding:8px 14px;
+      font-size:12.5px;
+      font-weight:500;
+      color:var(--text-dim);
+      background:var(--bg-1);
+      border:1px solid var(--card-border);
+      border-radius:999px;
+      cursor:pointer;
+      transition:all .2s;
+    }
+    .chip span:hover{ border-color:var(--purple-1); color:var(--text); }
+    .chip input:checked + span{
+      color:#fff;
+      border-color:transparent;
+      background:linear-gradient(135deg, var(--purple-1), #6d4fd1);
+      box-shadow:0 6px 16px -6px var(--purple-glow);
+    }
+    .chip input:focus-visible + span{ box-shadow:0 0 0 3px var(--purple-glow); }
+
+    .btn{
+      width:100%;
+      padding:14px 0;
+      border:none;
+      border-radius:12px;
+      cursor:pointer;
+      font-family:'Space Grotesk',sans-serif;
+      font-size:15px;
+      font-weight:600;
+      color:#fff;
+      background:linear-gradient(135deg, var(--purple-1), #6d4fd1);
+      box-shadow:0 12px 26px -10px var(--purple-glow);
+      transition:transform .15s, filter .15s;
+    }
+    .btn:hover{ filter:brightness(1.08); transform:translateY(-1px); }
+    .btn:active{ transform:none; }
+
+    /* Estado de sucesso */
+    .sucesso{ display:none; text-align:center; padding:10px 0; }
+    .sucesso.show{ display:block; animation:fade .4s ease; }
+    .sucesso .check{
+      width:64px; height:64px; margin:0 auto 18px;
+      display:flex; align-items:center; justify-content:center;
+      border-radius:50%;
+      background:rgba(139,92,246,.15);
+      border:1px solid rgba(139,92,246,.35);
+    }
+    .sucesso .check svg{ width:28px; height:28px; stroke:var(--purple-2); }
+    .sucesso h2{ margin-bottom:8px; }
+    .sucesso p{ margin:0 0 24px; font-size:13.5px; line-height:1.6; color:var(--text-dim); }
+    #formulario.hide{ display:none; }
+
+    @keyframes fade{ from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none} }
+
+    @media (max-width:760px){
+      .contato{ grid-template-columns:1fr; }
+      .info{ padding:30px 26px; }
+      .info h1{ font-size:25px; }
+      .info-list{ padding-top:24px; }
+      .form-area{ padding:30px 26px; }
+    }
+    @media (prefers-reduced-motion:reduce){
+      *{ animation:none !important; transition:none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <main class="contato">
+
+    <!-- Lado esquerdo -->
+    <aside class="info">
+      <span class="badge">Resgate do prêmio</span>
+      <h1>Vamos cuidar do seu prêmio</h1>
+      <p>Parabéns pela conquista! Conte pra gente como podemos ajudar e damos início ao envio.</p>
+
+      <ul class="info-list">
+        <li>
+          <span class="ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"></rect><path d="m22 7-10 6L2 7"></path></svg>
+          </span>
+          <div>
+            <small>Prefere falar direto?</small>
+            <a href="mailto:Eduardopodgaiskis017@gmail.com">Eduardopodgaiskis017@gmail.com</a>
+          </div>
+        </li>
+        <li>
+          <span class="ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg>
+          </span>
+          <div>
+            <small>Tempo de resposta</small>
+            Em até 24 horas
+          </div>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- Lado direito -->
+    <section class="form-area">
+
+      <div id="formulario">
+        <h2>Envie sua mensagem</h2>
+        <p class="sub">Todos os campos são obrigatórios.</p>
+
+        <form id="contatoForm" novalidate>
+          <div class="field">
+            <span class="group-label">Assunto</span>
+            <div class="chips">
+              <label class="chip"><input type="radio" name="assunto" value="Receber meu prêmio" checked><span>Receber meu prêmio</span></label>
+              <label class="chip"><input type="radio" name="assunto" value="Endereço"><span>Endereço</span></label>
+              <label class="chip"><input type="radio" name="assunto" value="Outro"><span>Outro</span></label>
+            </div>
+          </div>
+
+          <div class="field" id="fieldNome">
+            <label for="nome">Nome completo</label>
+            <input type="text" id="nome" name="nome" placeholder="Seu nome" autocomplete="name">
+            <div class="err-msg">Informe seu nome.</div>
+          </div>
+
+          <div class="field" id="fieldEmail">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" name="email" placeholder="seuemail@exemplo.com" autocomplete="email">
+            <div class="err-msg">Informe um e-mail válido.</div>
+          </div>
+
+          <div class="field" id="fieldMensagem">
+            <label for="mensagem">Mensagem</label>
+            <textarea id="mensagem" name="mensagem" maxlength="500" placeholder="Conte um pouco sobre o prêmio ganho ou deixe uma observação..."></textarea>
+            <div class="err-msg">Escreva uma mensagem (mínimo de 5 caracteres).</div>
+            <div class="counter"><span id="contador">0</span>/500</div>
+          </div>
+
+          <button type="submit" class="btn">Enviar mensagem</button>
+        </form>
+      </div>
+
+      <div class="sucesso" id="sucesso" role="status" aria-live="polite">
+        <div class="check">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>
+        </div>
+        <h2>Mensagem enviada!</h2>
+        <p>Recebemos seus dados. Agora só falta informar o endereço de entrega do prêmio.</p>
+        <button type="button" class="btn" data-rota="endereco">Continuar para o endereço</button>
+      </div>
+
+    </section>
+  </main>
+
+  <script>
+    // Rotas da aplicação
+    const ROTAS = {
+      endereco: '/Jogo-de-roleta-/HTML/endereco.html'   // troque pelo nome real da página
+    };
+
+    function irPara(nomeRota) {
+      const destino = ROTAS[nomeRota];
+      if (destino) window.location.href = destino;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const form      = document.getElementById('contatoForm');
+      const formWrap  = document.getElementById('formulario');
+      const sucesso   = document.getElementById('sucesso');
+      const mensagem  = document.getElementById('mensagem');
+      const contador  = document.getElementById('contador');
+      const emailRe   = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      const campos = [
+        { id: 'nome',     wrap: 'fieldNome',     valido: (v) => v.length >= 2 },
+        { id: 'email',    wrap: 'fieldEmail',    valido: (v) => emailRe.test(v) },
+        { id: 'mensagem', wrap: 'fieldMensagem', valido: (v) => v.length >= 5 }
+      ];
+
+      function validar(campo) {
+        const ok = campo.valido(document.getElementById(campo.id).value.trim());
+        document.getElementById(campo.wrap).classList.toggle('has-error', !ok);
+        return ok;
+      }
+
+      campos.forEach((campo) => {
+        document.getElementById(campo.id).addEventListener('input', () => {
+          if (document.getElementById(campo.wrap).classList.contains('has-error')) validar(campo);
+        });
+      });
+
+      mensagem.addEventListener('input', () => {
+        contador.textContent = mensagem.value.length;
+      });
+
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        if (!campos.map(validar).every(Boolean)) return;
+
+        try {
+          sessionStorage.setItem('contatoResgate', JSON.stringify({
+            assunto:  form.assunto.value,
+            nome:     document.getElementById('nome').value.trim(),
+            email:    document.getElementById('email').value.trim(),
+            mensagem: mensagem.value.trim()
+          }));
+        } catch (e) {}
+
+        formWrap.classList.add('hide');
+        sucesso.classList.add('show');
+      });
+
+      document.querySelectorAll('[data-rota]').forEach((botao) => {
+        botao.addEventListener('click', () => irPara(botao.dataset.rota));
+      });
+    });
+  </script>
+
+</body>
+</html>

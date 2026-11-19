@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Como Participar - Regras da Roleta</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #14121e;
+      background-image: 
+        radial-gradient(circle at 18% 15%, rgba(56, 40, 92, 0.55) 0%, rgba(27, 23, 46, 0.2) 45%, transparent 75%),
+        linear-gradient(145deg, #211a36 0%, #161422 50%, #12111a 100%);
+      background-attachment: fixed;
+    }
+
+    .theme-card {
+      background: rgba(26, 24, 41, 0.78);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.55);
+    }
+
+    .rule-item {
+      background: rgba(18, 16, 29, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      transition: all 0.2s ease;
+    }
+
+    .rule-item:hover {
+      border-color: rgba(129, 140, 248, 0.35);
+      background: rgba(24, 21, 38, 0.85);
+    }
+  </style>
+</head>
+<body class="text-slate-100 min-h-screen flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
+
+  <!-- Barra Superior com Seta de Voltar -->
+  <header class="w-full max-w-2xl mx-auto px-4 pt-6 pb-2 flex items-center justify-between">
+    <button 
+      onclick="voltarPaginaAnterior()" 
+      aria-label="Voltar para a página anterior"
+      class="group inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-slate-300 hover:text-white transition-all duration-200 cursor-pointer"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 transform group-hover:-translate-x-1 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+      </svg>
+      <span class="font-medium text-sm">Voltar</span>
+    </button>
+
+    <span class="text-xs font-medium text-slate-400 bg-white/[0.04] border border-white/[0.07] px-3 py-1 rounded-full">
+      Regulamento
+    </span>
+  </header>
+
+  <!-- Conteúdo Principal -->
+  <main class="w-full max-w-2xl mx-auto px-4 py-6 flex-1 flex items-center">
+    <div class="theme-card w-full rounded-2xl p-6 sm:p-8">
+      
+      <!-- Ícone Superior Circular -->
+      <div class="flex flex-col items-center text-center mb-7">
+        <div class="w-12 h-12 rounded-full bg-emerald-500/15 border border-emerald-500/25 flex items-center justify-center mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+
+        <h1 class="text-xl sm:text-2xl font-bold text-white tracking-tight">
+          Como Participar
+        </h1>
+        <p class="text-slate-400 text-xs sm:text-sm mt-1.5 max-w-md leading-relaxed">
+          Confira as <span class="text-amber-400 font-medium">5 regras obrigatórias</span> para participar da roleta e garantir o envio do seu prêmio.
+        </p>
+      </div>
+
+      <!-- Lista das 5 Regras -->
+      <div class="space-y-3">
+        
+        <!-- Regra 1 -->
+        <div class="rule-item rounded-xl p-4 flex items-start gap-3.5">
+          <span class="flex-shrink-0 w-7 h-7 rounded-lg bg-indigo-500/15 border border-indigo-400/25 text-indigo-300 font-semibold text-xs flex items-center justify-center mt-0.5">
+            1
+          </span>
+          <div>
+            <h2 class="text-sm font-semibold text-white">Faça login primeiro</h2>
+            <p class="text-slate-400 text-xs sm:text-sm mt-0.5 leading-relaxed">
+              Acesse sua conta antes de girar a roleta para que seu prêmio fique vinculado corretamente ao seu perfil.
+            </p>
+          </div>
+        </div>
+
+        <!-- Regra 2 -->
+        <div class="rule-item rounded-xl p-4 flex items-start gap-3.5">
+          <span class="flex-shrink-0 w-7 h-7 rounded-lg bg-indigo-500/15 border border-indigo-400/25 text-indigo-300 font-semibold text-xs flex items-center justify-center mt-0.5">
+            2
+          </span>
+          <div>
+            <h2 class="text-sm font-semibold text-white">Só pode girar 1 vez</h2>
+            <p class="text-slate-400 text-xs sm:text-sm mt-0.5 leading-relaxed">
+              Cada participante tem direito a exatamente <span class="text-amber-400 font-medium">1 (um) giro único</span>. Após o giro, o resultado é salvo automaticamente.
+            </p>
+          </div>
+        </div>
+
+        <!-- Regra 3 -->
+        <div class="rule-item rounded-xl p-4 flex items-start gap-3.5">
+          <span class="flex-shrink-0 w-7 h-7 rounded-lg bg-emerald-500/15 border border-emerald-400/25 text-emerald-400 font-semibold text-xs flex items-center justify-center mt-0.5">
+            3
+          </span>
+          <div>
+            <h2 class="text-sm font-semibold text-white">Ao ganhar o item, adicione seu endereço</h2>
+            <p class="text-slate-400 text-xs sm:text-sm mt-0.5 leading-relaxed">
+              Assim que ganhar, preencha o formulário de entrega com seu endereço completo para confirmar o envio do prêmio.
+            </p>
+          </div>
+        </div>
+
+        <!-- Regra 4 -->
+        <div class="rule-item rounded-xl p-4 flex items-start gap-3.5">
+          <span class="flex-shrink-0 w-7 h-7 rounded-lg bg-indigo-500/15 border border-indigo-400/25 text-indigo-300 font-semibold text-xs flex items-center justify-center mt-0.5">
+            4
+          </span>
+          <div>
+            <h2 class="text-sm font-semibold text-white">Apenas uma conta por pessoa</h2>
+            <p class="text-slate-400 text-xs sm:text-sm mt-0.5 leading-relaxed">
+              O uso de contas duplicadas para tentar girar novamente invalida o prêmio conquistado.
+            </p>
+          </div>
+        </div>
+
+        <!-- Regra 5 -->
+        <div class="rule-item rounded-xl p-4 flex items-start gap-3.5">
+          <span class="flex-shrink-0 w-7 h-7 rounded-lg bg-indigo-500/15 border border-indigo-400/25 text-indigo-300 font-semibold text-xs flex items-center justify-center mt-0.5">
+            5
+          </span>
+          <div>
+            <h2 class="text-sm font-semibold text-white">Confira seus dados antes de enviar</h2>
+            <p class="text-slate-400 text-xs sm:text-sm mt-0.5 leading-relaxed">
+              Revise CEP, rua, número e complemento na tela de resumo antes de finalizar o cadastro do endereço.
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Rodapé Discreto -->
+  <footer class="w-full py-4 text-center text-xs text-slate-500">
+    Certifique-se de estar logado antes de iniciar.
+  </footer>
+
+  <script>
+    function voltarPaginaAnterior() {
+      if (window.history.length > 1 && document.referrer !== "") {
+        window.history.back();
+      } else {
+        window.location.href = "./roleta.html";
+      }
+    }
+  </script>
+</body>
+</html>
