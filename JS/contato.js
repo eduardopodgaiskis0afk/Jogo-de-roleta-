@@ -6,7 +6,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('contatoForm');
   const status = document.getElementById('formStatus');
 
-  form.addEventListener('submit', (e) => {
+
+  document.getElementById('btnVoltar').addEventListener('click', () => {
+  let veioDoMesmoSite = false;
+  try { veioDoMesmoSite = new URL(document.referrer).origin === location.origin; } catch (e) {}
+
+  if (veioDoMesmoSite || history.length > 1) {
+    history.back();      // volta para a página que abriu o contato (qualquer uma das 3)
+  } else {
+    irPara('inicio');    // abriu o contato direto: vai para a página padrão
+  }
+});
+  
+form.addEventListener('submit', (e) => {
     e.preventDefault();
 
     const nome = document.getElementById('nome');

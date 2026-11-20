@@ -7,7 +7,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/Jogo-de-roleta-/Style/style.css">
+  <link rel="stylesheet" href="/Style/style.css">
 
   <!-- Só o que o style.css não tem -->
   <style>
@@ -110,7 +110,7 @@
           </p>
         </div>
 
-        <form id="cepForm" novalidate>
+        <form id="cepForm" novalidate autocomplete="off">
           <div class="cep-row">
             <div class="field" id="fieldCep">
               <label for="cep">CEP</label>
@@ -166,7 +166,8 @@
   <script>
     // Rotas da aplicação
     const ROTAS = {
-      contato: './contato.html'   // troque se o nome do arquivo for outro
+      confirmarDados: './confirmar-dados.html',    // página de revisão
+      contato: './contato.html'                   // troque se o nome do arquivo for outro
     };
 
     function irPara(nomeRota) {
@@ -178,6 +179,53 @@
       document.querySelectorAll('[data-rota]').forEach((botao) => {
         botao.addEventListener('click', () => irPara(botao.dataset.rota));
       });
+    });
+
+    // Ao clicar em "Confirmar e enviar": valida o número e abre a página de revisão,
+    // levando o endereço na URL (é o que o mensagem.js lê lá).
+    // O "true" no final faz este código rodar antes do cep.js.
+    document.getElementById('cepForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+
+      const $ = (id) => document.getElementById(id);
+      if (!$('rua').value.trim()) return;               // endereço ainda não carregado
+
+      if (!$('numero').value.trim()) {                  // número é obrigatório
+        $('fieldNumero').classList.add('has-error');
+        $('numero').focus();
+        return;
+      }
+      $('fieldNumero').classList.remove('has-error');
+
+      const params = new URLSearchParams({
+        cep:         $('cep').value.trim(),
+        rua:         $('rua').value.trim(),
+        bairro:      $('bairro').value.trim(),
+        cidade:      $('cidade').value.trim(),
+        numero:      $('numero').value.trim(),
+        complemento: $('complemento').value.trim()
+      });
+
+      const nome = $('saudacaoNome').textContent.trim();
+      if (nome && nome !== 'ganhador(a)') params.set('nome', nome);
+
+      window.location.href = ROTAS.confirmarDados + '?' + params.toString();
+    }, true);
+
+    // CORREÇÃO: ao voltar para esta página (botão "voltar" do navegador ou do site),
+    // o navegador pode restaurá-la exatamente como estava, com o botão preso em
+    // "Enviando...". Aqui os botões são colocados de volta no estado normal.
+    window.addEventListener('pageshow', () => {
+      const confirmar = document.getElementById('confirmarBtn');
+      const buscar    = document.getElementById('buscarBtn');
+      const caixa     = document.getElementById('enderecoBox');
+
+      confirmar.textContent = 'Confirmar e enviar';
+      confirmar.disabled    = !caixa.classList.contains('show');  // só habilita se o endereço já foi carregado
+
+      buscar.textContent = 'Buscar';
+      buscar.disabled    = false;
     });
   </script>
   <script src="../js/cep.js"></script>

@@ -1,14 +1,35 @@
 // mensagem.js
-// Lê todos os dados recebidos via query string (vindos da página de CEP)
-// e monta o resumo exibido nesta página de agradecimento/confirmação.
+// Endereço: vem pela query string (página de CEP).
+// Nome e e-mail: vêm do usuário que fez login (guardado pelo auth.js).
+
+// >>> AJUSTE AQUI se o auth.js guardar o usuário logado em outra chave <<<
+const CHAVES_SESSAO = ['usuarioLogado', 'usuario', 'user', 'currentUser', 'sessao', 'logado'];
+
+function lerUsuarioLogado() {
+  for (const store of [sessionStorage, localStorage]) {
+    for (const chave of CHAVES_SESSAO) {
+      let raw;
+      try { raw = store.getItem(chave); } catch (e) { continue; }
+      if (!raw) continue;
+      try {
+        const obj = JSON.parse(raw);
+        if (obj && typeof obj === 'object') return obj;
+        if (typeof obj === 'string' && obj.includes('@')) return { email: obj };
+      } catch (e) {
+        if (raw.includes('@')) return { email: raw };
+      }
+    }
+  }
+  return {};
+}
 
 document.addEventListener('DOMContentLoaded', () => {
   const params = new URLSearchParams(window.location.search);
+  const user = lerUsuarioLogado();
 
   const dados = {
-    nome: params.get('nome') || '—',
-    email: params.get('email') || '—',
-    mensagem: params.get('mensagem') || '—',
+    nome: user.nome || user.name || params.get('nome') || '—',
+    email: user.email || params.get('email') || '—',
     cep: params.get('cep') || '—',
     rua: params.get('rua') || '—',
     bairro: params.get('bairro') || '—',
@@ -24,13 +45,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const linhas = [
     { k: 'Nome', v: dados.nome },
     { k: 'E-mail', v: dados.email },
-    { k: 'Endereço', v: enderecoCompleto },
-    { k: 'Mensagem', v: dados.mensagem, msg: true }
+    { k: 'Endereço', v: enderecoCompleto }
   ];
 
-  const resumoBox = document.getElementById('resumoBox');
-  resumoBox.innerHTML = linhas.map(linha => `
-    <div class="item${linha.msg ? ' msg' : ''}">
+  document.getElementById('resumoBox').innerHTML = linhas.map(linha => `
+    <div class="item">
       <span class="k">${linha.k}</span>
       <span class="v">${escapeHtml(linha.v)}</span>
     </div>

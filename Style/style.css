@@ -305,4 +305,23 @@ input[type="text"]{
 button.submit:disabled{
   opacity:.6;
   cursor:not-allowed;
+}.btn-voltar{
+  align-self:flex-start;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  margin-bottom:22px;
+  padding:8px 14px 8px 10px;
+  font-family:'Inter',sans-serif;
+  font-size:13px;
+  font-weight:500;
+  color:var(--text-dim);
+  background:transparent;
+  border:1px solid var(--card-border);
+  border-radius:999px;
+  cursor:pointer;
+  transition:color .2s, border-color .2s;
 }
+.btn-voltar:hover{ color:var(--text); border-color:var(--purple-1); }
+.btn-voltar:focus-visible{ outline:none; box-shadow:0 0 0 3px var(--purple-glow); }
+.btn-voltar svg{ width:16px; height:16px; stroke:currentColor; }
